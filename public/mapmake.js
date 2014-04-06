@@ -97,7 +97,7 @@ function initTimelapseMap(timeline) {
       map.removeLayer(timelapseLayers[i-1].layer);
     }
     map.addLayer(timelapseLayers[i].layer);
-    $("#timestamp").html("Riga - " + timelapseLayers[i].timestamp);
+    $("#header").html("Riga - " + timelapseLayers[i].timestamp);
     i++;
     if (i === timelapseLayers.length) {
       i = 0;
