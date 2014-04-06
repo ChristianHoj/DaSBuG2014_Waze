@@ -1,11 +1,13 @@
 require 'sinatra'
 require 'http_request.rb'
-require 'json'
-require 'hashie'
 
 get '/' do
-  @waze = fetch_waze_data
   erb :leafletdemo
+end
+
+get '/timelapse' do
+  @waze = IO.read('waze/1396712892.txt')
+  erb :timelapse
 end
 
 def fetch_waze_data
@@ -17,10 +19,5 @@ def fetch_waze_data
     top: 57.467857,
     bottom: 56.415208
   }
-  json_string = HttpRequest.get(url: uri, parameters: params).body
-  hash = JSON.parse json_string
-  msg = Hashie::Mash.new hash
-  jams = msg.jams
-  alerts = msg.alerts
-  irregularities = msg.irregularities
+  HttpRequest.get(url: uri, parameters: params).body
 end
