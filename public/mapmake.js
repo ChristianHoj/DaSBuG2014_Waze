@@ -10,6 +10,9 @@ L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
   attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors | Waze GeoRSS'
 }).addTo(map);
 
+var stdMarkerLayer = L.layerGroup();
+var iconMarkerLayer = L.layerGroup();
+
 // add a marker in the given location, attach some popup content to it and open the popup
 var marker_icon;
 for (var i = points.length - 1; i >= 0; i--) {
@@ -25,9 +28,11 @@ for (var i = points.length - 1; i >= 0; i--) {
     default:
     marker_icon = new L.Icon.Default();
   }
-  L.marker(points[i], {icon: marker_icon}).addTo(map)
-  .bindPopup(causes[i]);
+  stdMarkerLayer.addLayer(L.marker(points[i]).bindPopup(causes[i]));
+  iconMarkerLayer.addLayer(L.marker(points[i], {icon: marker_icon}).bindPopup(causes[i]));
 }
+stdMarkerLayer.addTo(map);
+
 // .openPopup();
 
 // var circle = L.circle([51.508, -0.11], 2000, {
@@ -35,3 +40,13 @@ for (var i = points.length - 1; i >= 0; i--) {
 //     fillColor: '#f03',
 //     fillOpacity: 0.5
 // }).addTo(map);
+
+$("#stdMarkers").on("click", function(event) {
+  map.removeLayer(iconMarkerLayer);
+  map.addLayer(stdMarkerLayer);
+});
+
+$("#iconMarkers").on("click", function(event) {
+  map.removeLayer(stdMarkerLayer);
+  map.addLayer(iconMarkerLayer);
+});
