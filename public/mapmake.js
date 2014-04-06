@@ -12,7 +12,8 @@ L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
   attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors | Waze GeoRSS'
 }).addTo(map);
 
-var stdMarkerLayer = L.layerGroup();
+var stdMarkerLayer = new L.layerGroup();
+var clusterMarkerLayer = new L.MarkerClusterGroup();
 var iconMarkerLayer = L.layerGroup();
 var annotationLayer = L.layerGroup();
 
@@ -40,6 +41,7 @@ for (var i = points.length - 1; i >= 0; i--) {
     marker_icon = new L.Icon.Default();
   }
   stdMarkerLayer.addLayer(L.marker(points[i]).bindPopup(causes[i]));
+  clusterMarkerLayer.addLayer(L.marker(points[i]).bindPopup(causes[i]));
   iconMarkerLayer.addLayer(L.marker(points[i], {icon: marker_icon}).bindPopup(causes[i]));
 }
 stdMarkerLayer.addTo(map);
@@ -53,9 +55,10 @@ annotationLayer.addLayer(circle);
 
 var baselayers = {
   "Markers": stdMarkerLayer,
-  "Icons": iconMarkerLayer
+  "Icons": iconMarkerLayer,
+  "Cluster": clusterMarkerLayer
 };
 var overlays = {
   "Heatmap": annotationLayer
-}
+};
 L.control.layers(baselayers, overlays).addTo(map);
