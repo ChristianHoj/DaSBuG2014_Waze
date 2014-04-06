@@ -1,15 +1,29 @@
+<h1 id="timestamp"></h1>
 <div id="map" style="height:700px"></div>
 
 
-<script type="text/javascript">
-var raw_waze = <%= @waze %>;
-var alerts = raw_waze.alerts;
-var points = [];
-var causes = [];
-for (var i = alerts.length - 1; i >= 0; i--) {
-  points.push([alerts[i].location.y, alerts[i].location.x]);
-  causes.push(alerts[i].type + "(" + alerts[i].location.y + "," + alerts[i].location.x + ")");
-}
-</script>
-
 <script src="mapmake.js"></script>
+<script type="text/javascript">
+  var alerts;
+  var points;
+  var causes;
+  var timeline = [];
+  var raw_waze;
+<% @wazes.each_with_index do |waze, idx| %>
+  raw_waze = <%= waze %>;
+  alerts = raw_waze.alerts;
+  points = new Array();
+  for (var i = alerts.length - 1; i >= 0; i--) {
+    points.push({
+      location: [alerts[i].location.y, alerts[i].location.x],
+      cause: alerts[i].type
+      });
+  }
+  timeline.push({
+    points: points,
+    timestamp: "<%= @timestamps[idx] %>"
+  });
+<% end %>
+
+  initTimelapseMap(timeline);
+</script>

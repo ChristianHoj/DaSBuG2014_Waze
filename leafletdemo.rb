@@ -1,23 +1,16 @@
 require 'sinatra'
-require 'http_request.rb'
 
 get '/' do
   erb :leafletdemo
 end
 
 get '/timelapse' do
-  @waze = IO.read('waze/1396712892.txt')
-  erb :timelapse
-end
-
-def fetch_waze_data
-  uri = 'http://world.waze.com/rtserver/web/GeoRSS'
-  params = {
-    format: 'JSON',
-    left: 24.799838,
-    right: 21.043941,
-    top: 57.467857,
-    bottom: 56.415208
+  @wazes = []
+  @timestamps = []
+  files = Dir['waze/*.txt']
+  files.each { |f|
+    @wazes << IO.read(f)
+    @timestamps << Time.at(f[5, 10].to_i).strftime("%a, %b %d %Y, %X")
   }
-  HttpRequest.get(url: uri, parameters: params).body
+  erb :timelapse
 end
