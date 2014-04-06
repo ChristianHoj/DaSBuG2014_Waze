@@ -1,4 +1,6 @@
-var warning_icon = L.divIcon({html: '<i class="fa fa-warning"></i>'});
+var accident_icon = L.divIcon({html: '<i class="fa fa-ambulance"></i>'});
+var hazard_icon = L.divIcon({html: '<i class="fa fa-cloud"></i>'});
+var jam_icon = L.divIcon({html: '<i class="fa fa-warning"></i>'});
 var police_icon = L.divIcon({html: '<i class="fa fa-tachometer"></i>'});
 
 
@@ -12,17 +14,26 @@ L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
 
 var stdMarkerLayer = L.layerGroup();
 var iconMarkerLayer = L.layerGroup();
+var annotationLayer = L.layerGroup();
 
 // add a marker in the given location, attach some popup content to it and open the popup
 var marker_icon;
 for (var i = points.length - 1; i >= 0; i--) {
   switch (causes[i]) {
-    case "WEATHERHAZARD":
-    marker_icon = warning_icon;
+    case "ACCIDENT":
+    marker_icon = accident_icon;
+    break;
+
+    case "JAM":
+    marker_icon = jam_icon;
     break;
 
     case "POLICEMAN":
     marker_icon = police_icon;
+    break;
+
+    case "WEATHERHAZARD":
+    marker_icon = hazard_icon;
     break;
 
     default:
@@ -33,20 +44,18 @@ for (var i = points.length - 1; i >= 0; i--) {
 }
 stdMarkerLayer.addTo(map);
 
-// .openPopup();
-
-// var circle = L.circle([51.508, -0.11], 2000, {
-//     color: 'red',
-//     fillColor: '#f03',
-//     fillOpacity: 0.5
-// }).addTo(map);
-
-$("#stdMarkers").on("click", function(event) {
-  map.removeLayer(iconMarkerLayer);
-  map.addLayer(stdMarkerLayer);
+var circle = L.circle([56.942661, 24.065871], 2000, {
+    color: 'red',
+    fillColor: '#f03',
+    fillOpacity: 0.5
 });
+annotationLayer.addLayer(circle);
 
-$("#iconMarkers").on("click", function(event) {
-  map.removeLayer(stdMarkerLayer);
-  map.addLayer(iconMarkerLayer);
-});
+var baselayers = {
+  "Markers": stdMarkerLayer,
+  "Icons": iconMarkerLayer
+};
+var overlays = {
+  "Heatmap": annotationLayer
+}
+L.control.layers(baselayers, overlays).addTo(map);
