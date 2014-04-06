@@ -5,7 +5,7 @@ var police_icon = L.divIcon({html: '<i class="fa fa-tachometer"></i>'});
 
 
 // create a map in the "map" div, set the view to a given place and zoom
-var map = L.map('map').setView(points[5], 12);
+var map = L.map('map').setView([56.951848,24.098697], 12);
 
 // add an OpenStreetMap tile layer
 L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
@@ -52,6 +52,12 @@ var circle = L.circle([56.942661, 24.065871], 2000, {
     fillOpacity: 0.5
 });
 annotationLayer.addLayer(circle);
+circle = L.circle([56.958192, 24.100122], 2000, {
+    color: 'yellow',
+    fillColor: '#cece00',
+    fillOpacity: 0.5
+});
+annotationLayer.addLayer(circle);
 
 var baselayers = {
   "Markers": stdMarkerLayer,
@@ -59,6 +65,6 @@ var baselayers = {
   "Cluster": clusterMarkerLayer
 };
 var overlays = {
-  "Heatmap": annotationLayer
+  "Zones": annotationLayer
 };
 L.control.layers(baselayers, overlays).addTo(map);
